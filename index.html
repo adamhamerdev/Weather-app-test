@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Weather app 2.0</title>
+    <style>
+      *{
+        margin: 0;
+        padding: 0;
+        outline: 0;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-weight: 500;
+      }
+      body{
+        background-color: rgb(88, 85, 85);
+      }
+
+      .card{
+        margin: 50px auto 0;
+        width: 500px  ;
+        background-image:linear-gradient(to bottom right,rgb(69, 233, 255), rgb(17, 134, 109)) ;
+        border: 1px transparent;
+        border-radius: 50px;
+        
+      }
+      .header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 25px ;
+      }
+
+      .header input{
+        border: 1px transparent;
+        border-radius: 20px;
+        padding: 8px 18px;
+        margin: 0 10px;
+        font-size: 18px;
+        width: 100%;
+      }
+
+      .invalid-msg {
+        position: relative;
+        bottom: 20px;
+        left: 50px;
+        color: white;
+        display: none ;
+      }
+      .search-button{
+        height: 38px;
+        width: 46px;
+        border: 1px transparent;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .search-button img {
+        height: 15px;
+        
+      }
+
+      .weather {
+        width: 460px;
+        margin: 20px auto 20px;
+        text-align: center;
+        display: none ;
+
+      }
+
+      .weather img {
+        height: 120px;
+        margin-bottom: 20px;
+
+      }
+
+      .weather h1{
+        font-size: 60px;
+        margin: 20px 0;
+      }
+
+      .weather h3{
+        margin: -25px 0 40px;
+        font-size: 33px;
+        
+      }
+
+      .weather h2 {
+        font-size: 40px;
+        margin: 20px 0;
+      }
+
+      .weather-state{
+        padding: 60px 0px ;
+        display: flex;
+        justify-content: space-between;
+
+        
+      }
+
+      .wind-col , .humidity-col{
+        font-size: 22px;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+
+      }
+
+      .wind-col img , .humidity-col img{
+        margin:0;
+        height: 35px ;
+      }
+
+
+
+
+
+
+
+      
+
+    </style>
+  </head>
+  <body>
+
+    <div class="card">
+      <div class="header">
+        <input type="text" placeholder="Enter city name here" class="input-box">
+        <button class="search-button"><img src="images/icons/search.png"></button>
+      </div>
+      <div class="invalid-msg">Invalid city name... Try again.</div>
+      <div class="weather">
+        <img src="images/icons/user (1).png"  class="weather-icon">
+        <h1 class="temperature">35°C</h1>
+        <h3 class="condition">Sunny</h3>
+        <h2 class="city">New York</h2>  
+        <div class="weather-state">
+          <div class="humidity-col">
+            <img src="images/icons/address-card.png">
+            <p>Humidity : Dry</p>
+          </div>
+          <div class="wind-col">
+            <img src="images/icons/burger-menu.png">
+            <p>Wind speed : 35 km/H</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    
+
+
+
+
+
+
+
+    <script>
+      
+
+      const apiKey = '450a51bd974a9515119fb201fd8bc095';
+      const url = 'https://api.openweathermap.org/data/2.5/weather?units=metric&q=';
+      
+      const searchBtn = document.querySelector('.search-button');
+      const inputBox = document.querySelector('.input-box');
+
+
+      async function getWeather(cityName) {
+        const response = await fetch(url+cityName+`&appid=${apiKey}`);
+
+        
+        if (response.status == 404){
+          document.querySelector('.invalid-msg').style.display = 'block';
+        }
+        else {
+          var data = await response.json();
+
+          document.querySelector('.temperature').innerHTML = Math.round(data.main.temp)+'°C';
+          document.querySelector('.condition').innerHTML = data.weather[0].main;
+          document.querySelector('.city').innerHTML = data.name;
+          document.querySelector('.humidity-col p').innerHTML = 'Humidity : '+data.main.humidity+' %';
+          document.querySelector('.wind-col p').innerHTML ='Wind speed : '+data.wind.speed+' Km/h';
+
+          document.querySelector('.weather').style.display = 'block' ;
+          document.querySelector('.invalid-msg').style.display = 'none';
+
+
+        }
+      }
+      searchBtn.addEventListener('click', ()=>{
+        getWeather(inputBox.value)
+      })
+
+    </script>
+
+  </body>
+</html>
